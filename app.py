@@ -4,7 +4,7 @@
 import streamlit as st
 
 st.set_page_config(
-    page_title="High Compensation Ratio Risk Prediction Model",
+    page_title="Post-Judgment Compensation Ratio Reference Estimator",
     layout="wide"
 )
 
@@ -30,24 +30,23 @@ IMPORTANT_NOTICE_HTML = """
         font-size: 1.35rem;
         font-weight: 700;
     ">Important Notice</h3>
-    <p style="margin-bottom: 13px; color: #273746;">
+    <p style="margin-bottom: 13px; color: #273746; text-align: justify; text-align-last: left; hyphens: auto;">
         Please do <strong>not</strong> enter real names, case numbers, medical record numbers,
         ID numbers, addresses, contact information, or any identifiable personal information.
         This tool is designed only for <strong>de-identified case-level variables</strong>.
     </p>
-    <p style="margin-bottom: 13px; color: #273746;">
+    <p style="margin-bottom: 13px; color: #273746; text-align: justify; text-align-last: left; hyphens: auto;">
         The authors do not store user inputs or use them for model retraining. However, this
         application is hosted on a third-party cloud platform, which may process standard
         technical logs or metadata according to its own policies.
     </p>
-    <p style="margin-bottom: 0; color: #273746;">
+    <p style="margin-bottom: 0; color: #273746; text-align: justify; text-align-last: left; hyphens: auto;">
         This tool provides only a <strong>non-binding, model-based reference estimate</strong>
-        for research and auxiliary use. It is <strong>not</strong> legal advice, medical advice,
+        for research and auxiliary reference purposes. It is <strong>not</strong> legal advice, medical advice,
         judicial appraisal, liability determination, or a basis for court decisions.
     </p>
 </div>
 """
-
 
 def show_important_notice_content():
     st.markdown(IMPORTANT_NOTICE_HTML, unsafe_allow_html=True)
@@ -59,7 +58,7 @@ def show_important_notice_content():
 
 if not st.session_state.important_notice_confirmed:
     if hasattr(st, "dialog"):
-        @st.dialog("Important Notice")
+        @st.dialog("\u200b")
         def important_notice_dialog():
             show_important_notice_content()
 
@@ -199,7 +198,7 @@ def plot_contributions(contribution_df: pd.DataFrame):
 # =========================
 st.markdown(
     "<h1 style='text-align: center; color: #2E86C1;'>"
-    "High Compensation Ratio Risk Prediction Model"
+    "Post-Judgment Compensation Ratio Reference Estimator"
     "</h1>",
     unsafe_allow_html=True
 )
@@ -260,40 +259,47 @@ X_input = X_input.reindex(columns=features)
 X_model = prepare_model_input(X_input)
 
 # =========================
-# 8. Prediction button
+# 8. Reference estimate button
 # =========================
 st.markdown("---")
-predict_btn = st.button("🔮 Predict Risk", width="stretch")
+predict_btn = st.button("📊 Generate Reference Estimate", width="stretch")
 
 # =========================
-# 9. Prediction result only
+# 9. Model-based reference estimate only
 # =========================
 if predict_btn:
     prob = float(model.predict_proba(X_model)[0][1])
     pred = 1 if prob >= 0.5 else 0
 
-    st.subheader("📊 Prediction Result")
+    st.subheader("📊 Model-Based Reference Estimate")
 
     col_r1, col_r2 = st.columns(2)
 
     with col_r1:
         st.metric(
-            label="Predicted High-risk Probability",
+            label="Estimated Probability of Compensation Ratio ≥50%",
             value=f"{prob:.3f}"
         )
 
     with col_r2:
         st.metric(
-            label="Predicted Risk Level",
-            value="High Risk" if pred == 1 else "Low Risk"
+            label="Reference Result",
+            value=(
+                "Higher Probability of Compensation Ratio ≥50%"
+                if pred == 1
+                else "Lower Probability of Compensation Ratio ≥50%"
+            )
         )
-
 
     st.markdown("---")
 
-
-
     if pred == 1:
-        st.error("The model classifies this case as High Risk.")
+        st.error(
+            "The model provides a higher-probability reference estimate for "
+            "a compensation ratio ≥50%."
+        )
     else:
-        st.success("The model classifies this case as Low Risk.")
+        st.success(
+            "The model provides a lower-probability reference estimate for "
+            "a compensation ratio ≥50%."
+        )
