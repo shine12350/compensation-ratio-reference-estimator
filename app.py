@@ -4,7 +4,7 @@
 import streamlit as st
 
 st.set_page_config(
-    page_title="High Compensation Ratio Risk Prediction Model",
+    page_title="Post-Judgment Compensation Ratio Reference Estimator",
     layout="wide"
 )
 
@@ -30,19 +30,19 @@ IMPORTANT_NOTICE_HTML = """
         font-size: 1.35rem;
         font-weight: 700;
     ">Important Notice</h3>
-    <p style="margin-bottom: 13px; color: #273746;">
+    <p style="margin-bottom: 13px; color: #273746; text-align: justify; text-align-last: left; hyphens: auto;">
         Please do <strong>not</strong> enter real names, case numbers, medical record numbers,
         ID numbers, addresses, contact information, or any identifiable personal information.
         This tool is designed only for <strong>de-identified case-level variables</strong>.
     </p>
-    <p style="margin-bottom: 13px; color: #273746;">
+    <p style="margin-bottom: 13px; color: #273746; text-align: justify; text-align-last: left; hyphens: auto;">
         The authors do not store user inputs or use them for model retraining. However, this
         application is hosted on a third-party cloud platform, which may process standard
         technical logs or metadata according to its own policies.
     </p>
-    <p style="margin-bottom: 0; color: #273746;">
+    <p style="margin-bottom: 0; color: #273746; text-align: justify; text-align-last: left; hyphens: auto;">
         This tool provides only a <strong>non-binding, model-based reference estimate</strong>
-        for research and auxiliary use. It is <strong>not</strong> legal advice, medical advice,
+        for research and auxiliary reference purposes. It is <strong>not</strong> legal advice, medical advice,
         judicial appraisal, liability determination, or a basis for court decisions.
     </p>
 </div>
@@ -59,7 +59,7 @@ def show_important_notice_content():
 
 if not st.session_state.important_notice_confirmed:
     if hasattr(st, "dialog"):
-        @st.dialog("Important Notice")
+        @st.dialog("")
         def important_notice_dialog():
             show_important_notice_content()
 
@@ -199,7 +199,7 @@ def plot_contributions(contribution_df: pd.DataFrame):
 # =========================
 st.markdown(
     "<h1 style='text-align: center; color: #2E86C1;'>"
-    "High Compensation Ratio Risk Prediction Model"
+    "Post-Judgment Compensation Ratio Reference Estimator"
     "</h1>",
     unsafe_allow_html=True
 )
