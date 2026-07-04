@@ -9,7 +9,68 @@ st.set_page_config(
 )
 
 # =========================
-# 1. Dependencies
+# 1. Important notice gate
+# =========================
+if "important_notice_confirmed" not in st.session_state:
+    st.session_state.important_notice_confirmed = False
+
+IMPORTANT_NOTICE_HTML = """
+<div style="
+    border: 1px solid #D6EAF8;
+    border-radius: 16px;
+    padding: 22px 24px;
+    background: linear-gradient(135deg, #F8FBFF 0%, #EEF7FF 100%);
+    box-shadow: 0 8px 24px rgba(46, 134, 193, 0.12);
+    line-height: 1.65;
+">
+    <h3 style="
+        margin-top: 0;
+        margin-bottom: 14px;
+        color: #1F618D;
+        font-size: 1.35rem;
+        font-weight: 700;
+    ">Important Notice</h3>
+    <p style="margin-bottom: 13px; color: #273746;">
+        Please do <strong>not</strong> enter real names, case numbers, medical record numbers,
+        ID numbers, addresses, contact information, or any identifiable personal information.
+        This tool is designed only for <strong>de-identified case-level variables</strong>.
+    </p>
+    <p style="margin-bottom: 13px; color: #273746;">
+        The authors do not store user inputs or use them for model retraining. However, this
+        application is hosted on a third-party cloud platform, which may process standard
+        technical logs or metadata according to its own policies.
+    </p>
+    <p style="margin-bottom: 0; color: #273746;">
+        This tool provides only a <strong>non-binding, model-based reference estimate</strong>
+        for research and auxiliary use. It is <strong>not</strong> legal advice, medical advice,
+        judicial appraisal, liability determination, or a basis for court decisions.
+    </p>
+</div>
+"""
+
+
+def show_important_notice_content():
+    st.markdown(IMPORTANT_NOTICE_HTML, unsafe_allow_html=True)
+    st.write("")
+    if st.button("I understand and agree to continue", type="primary", use_container_width=True):
+        st.session_state.important_notice_confirmed = True
+        st.rerun()
+
+
+if not st.session_state.important_notice_confirmed:
+    if hasattr(st, "dialog"):
+        @st.dialog("Important Notice")
+        def important_notice_dialog():
+            show_important_notice_content()
+
+        important_notice_dialog()
+    else:
+        show_important_notice_content()
+
+    st.stop()
+
+# =========================
+# 2. Dependencies
 # =========================
 import textwrap
 
@@ -19,7 +80,7 @@ import numpy as np
 import pandas as pd
 
 # =========================
-# 2. Load logistic regression model
+# 3. Load logistic regression model
 #    Compatible with either:
 #    A. a directly saved sklearn LogisticRegression object
 #    B. a saved bundle: {"model": ..., "scaler": ..., "features": ...}
@@ -44,7 +105,7 @@ if not features:
     st.stop()
 
 # =========================
-# 3. Helper functions
+# 4. Helper functions
 # =========================
 def yes_no_to_int(value: str) -> int:
     return 1 if "Yes" in value else 0
@@ -134,7 +195,7 @@ def plot_contributions(contribution_df: pd.DataFrame):
     return fig
 
 # =========================
-# 4. Page title
+# 5. Page title
 # =========================
 st.markdown(
     "<h1 style='text-align: center; color: #2E86C1;'>"
@@ -145,7 +206,7 @@ st.markdown(
 
 
 # =========================
-# 5. Input area
+# 6. Input area
 # =========================
 col1, col2 = st.columns(2)
 
@@ -180,7 +241,7 @@ with col2:
     )
 
 # =========================
-# 6. Build prediction sample
+# 7. Build prediction sample
 # =========================
 disability_binary = disability_grade_to_binary(Disability_severity_grade_actual)
 
@@ -199,13 +260,13 @@ X_input = X_input.reindex(columns=features)
 X_model = prepare_model_input(X_input)
 
 # =========================
-# 7. Prediction button
+# 8. Prediction button
 # =========================
 st.markdown("---")
 predict_btn = st.button("🔮 Predict Risk", width="stretch")
 
 # =========================
-# 8. Prediction result only
+# 9. Prediction result only
 # =========================
 if predict_btn:
     prob = float(model.predict_proba(X_model)[0][1])
