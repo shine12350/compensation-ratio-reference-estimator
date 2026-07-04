@@ -4,7 +4,7 @@
 import streamlit as st
 
 st.set_page_config(
-    page_title="Post-Judgment Compensation Ratio Reference Estimator",
+    page_title="High Compensation Ratio Risk Prediction Model",
     layout="wide"
 )
 
@@ -30,39 +30,23 @@ IMPORTANT_NOTICE_HTML = """
         font-size: 1.35rem;
         font-weight: 700;
     ">Important Notice</h3>
-    <p style="margin-bottom: 13px; color: #273746; text-align: justify; text-align-last: left; hyphens: auto;">
+    <p style="margin-bottom: 13px; color: #273746;">
         Please do <strong>not</strong> enter real names, case numbers, medical record numbers,
         ID numbers, addresses, contact information, or any identifiable personal information.
         This tool is designed only for <strong>de-identified case-level variables</strong>.
     </p>
-    <p style="margin-bottom: 13px; color: #273746; text-align: justify; text-align-last: left; hyphens: auto;">
+    <p style="margin-bottom: 13px; color: #273746;">
         The authors do not store user inputs or use them for model retraining. However, this
         application is hosted on a third-party cloud platform, which may process standard
         technical logs or metadata according to its own policies.
     </p>
-    <p style="margin-bottom: 0; color: #273746; text-align: justify; text-align-last: left; hyphens: auto;">
+    <p style="margin-bottom: 0; color: #273746;">
         This tool provides only a <strong>non-binding, model-based reference estimate</strong>
-        for research and auxiliary reference purposes. It is <strong>not</strong> legal advice, medical advice,
+        for research and auxiliary use. It is <strong>not</strong> legal advice, medical advice,
         judicial appraisal, liability determination, or a basis for court decisions.
     </p>
 </div>
 """
-
-# Hide Streamlit's native dialog title so only the styled title inside the blue notice box is visible.
-st.markdown(
-    """
-    <style>
-    div[role="dialog"] h2,
-    div[data-testid="stDialog"] h2 {
-        display: none !important;
-    }
-    div[role="dialog"] [data-testid="stVerticalBlock"] {
-        gap: 0.75rem;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
 
 
 def show_important_notice_content():
@@ -215,7 +199,7 @@ def plot_contributions(contribution_df: pd.DataFrame):
 # =========================
 st.markdown(
     "<h1 style='text-align: center; color: #2E86C1;'>"
-    "Post-Judgment Compensation Ratio Reference Estimator"
+    "High Compensation Ratio Risk Prediction Model"
     "</h1>",
     unsafe_allow_html=True
 )
