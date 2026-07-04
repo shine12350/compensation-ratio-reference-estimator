@@ -48,6 +48,22 @@ IMPORTANT_NOTICE_HTML = """
 </div>
 """
 
+# Hide Streamlit's native dialog title so only the styled title inside the blue notice box is visible.
+st.markdown(
+    """
+    <style>
+    div[role="dialog"] h2,
+    div[data-testid="stDialog"] h2 {
+        display: none !important;
+    }
+    div[role="dialog"] [data-testid="stVerticalBlock"] {
+        gap: 0.75rem;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
 
 def show_important_notice_content():
     st.markdown(IMPORTANT_NOTICE_HTML, unsafe_allow_html=True)
@@ -59,7 +75,7 @@ def show_important_notice_content():
 
 if not st.session_state.important_notice_confirmed:
     if hasattr(st, "dialog"):
-        @st.dialog("")
+        @st.dialog("Important Notice")
         def important_notice_dialog():
             show_important_notice_content()
 
